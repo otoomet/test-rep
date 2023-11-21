@@ -35,13 +35,15 @@
 \subtitle{Introduction}
 \author[]{Ott Toomet}
 \begin{document}
-<<init, echo=FALSE, include=FALSE>>=
-options(tibble.width=50, tibble.print_max=6, tibble.print_min=4)
+<<init, include=FALSE>>=
 knitr::opts_knit$set(aliases=c(h="fig.height"))
-knitr::opts_chunk$set(fig.height=100/25.4, fig.path=".figs/cmd-git",
+knitr::opts_chunk$set(fig.height=100/25.4, fig.path=".figs/cmd-git/",
                      message=FALSE, 
                      cache=TRUE, cache.path=".cache/cmd-git/")
 @ 
+<<include=FALSE>>=
+options(pillar.width=50, tibble.print_max=6, tibble.print_min=4)
+@
 
 \begin{frame}
   \maketitle
@@ -106,6 +108,183 @@ knitr::opts_chunk$set(fig.height=100/25.4, fig.path=".figs/cmd-git",
   \item fork
   \end{itemize}
 \end{frame}
+	
+\section[Git]{Version Control and Git}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[width=0.85\linewidth]{img/no-version-control.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[width=0.25\linewidth]{img/rc-tree.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Main Concepts}
+  \begin{description}
+  \item[Repo] (Repository): a place where the VC keeps the project's files and their history
+    \begin{itemize}
+    \item Don't mess with files in repo
+    \end{itemize}
+  \item[Branch] parallel version of the project
+  \item[Main] (Master): ``official branch''
+  \item[Working copy] your set of files you edit.  Working copy is not
+    repo!
+  \item[Commit] ``send'' your changes to repo
+  \item[Merge] take all the changes from one branch and add to another
+  \item[Conflict] when one cannot merge automatically
+    \begin{itemize}
+    \item changes in two branches clash
+    \end{itemize}
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Basic Workflow}
+  \begin{enumerate}
+  \item \textbf{clone} repo to your local computer
+    \begin{itemize}
+    \item only done once, now you have working copy
+    \end{itemize}
+  \item \label{it:edit} edit the files
+    \begin{itemize}
+    \item change, add, delete
+    \end{itemize}
+  \item \textbf{commit} your changes
+    \begin{itemize}
+    \item Add an informative \emph{commit message}
+    \end{itemize}
+  \item \textbf{pull} changes of your teammates
+  \item Resolve conflicts
+  \item \textbf{push} your changes to github
+  \item Go back to~\ref{it:edit}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Git}
+  \begin{columns}[T]
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+      \item perhaps the most popular VC system
+      \item free and open source
+      \item can handle large projects
+      \item \href{linux kernel}{https://github.com/torvalds/linux} 20M
+        lines, 50k files 
+      \item GitHub cloud service/front end
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=0.8\linewidth]{img/github_logo.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf[pages={{15,16,18}}]{lecture-2-git-markdown.pdf}
+}
+
+\begin{frame}
+  \frametitle{Github workflow}
+  \begin{enumerate}
+  \item \textbf{fork} (copy) a repo (only done once)
+  \item \textbf{clone} the repo (only done once on each computer)
+  \item edit ... \textbf{commit} ... \textbf{push} ...
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Before you start...}
+... configure your git (only once per computer)
+
+<<engine="bash", eval=FALSE>>=
+# enter your full name (without the dashes)
+git config --global user.name "your-full-name"
+
+# enter your email address (the one associated with your GitHub account)
+git config --global user.email "your-email-address"
+@
+\end{frame}
+
+\begin{frame}
+  \frametitle{Demo}
+  \begin{itemize}
+  \item fork happy gitting
+    \url{https://github.com/info201b-2023wi/happy-gitting}
+    under your user
+    \begin{itemize}
+    \item must be done on github
+    \item if you don't fork, you cannot push later
+    \end{itemize}
+  \item clone it to your local computer
+<<engine="bash", eval=FALSE>>=
+git clone https://github.com/info201b-sp21/Happy-gitting.git
+@
+   what happens if you clone the original repo, not your fork?
+
+   (don't fork your problem set repo)
+ \item edit files.  
+   
+   use whichever text editor you like (RStudio, Atom, ...)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item if you added a file, tell this to git:
+<<engine="bash", eval=FALSE>>=
+git add <new_file>
+@
+\item check status:
+<<engine="bash", eval=FALSE>>=
+git status -s
+@
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item commit your changes
+<<engine="bash", eval=FALSE>>=
+git commit -a -m "<explain what did you do>"
+@
+ `-a` for all changes  
+\item send your edits to the central repo
+<<engine="bash", eval=FALSE>>=
+git push
+@ 
+  \item check the updates on GitHub
+  \item View the log messages
+<<engine="bash", eval=FALSE>>=
+git log
+@
+  \end{itemize}
+\end{frame}
+
+
+	
+\section{Solution}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \frametitle{Absolute/relative path}
+  If you use relative path, you can move your project folder elsewhere
+  (e.g. different computer, or to Desktop) and still use exactly the
+  same relative path.
+  
+  If using absolute path, you have to change the path accordingly.
+  
+  Hence advisable to use the relative path.
+\end{frame}
+
 
 
 \section[Git]{Version Control and Git}
@@ -292,9 +471,716 @@ If you are in \texttt{vi}:
 \end{itemize}
 \end{frame}
 
+
+
+
+\section{File System}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \frametitle{Files and folders}
+  Yucun is a UW student
+  \begin{itemize}
+  \item He keeps his school-related stuff in folder \emph{UW} inside
+    of \emph{Documents}
+  \item Inside of the \emph{UW}, he organizes his files by classes
+  \item And inside of one class, \emph{info201}, he splits his files
+    into \emph{exercises}, \emph{homework}, and \emph{stuff}
+  \item There is also \emph{cheatsheet.pdf}, a file, not folder
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Documents}
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{img/yucun-documents-content.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UW}
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{img/yucun-uw-content.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{info201}
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{img/yucun-info201-content.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Folders as a tree}
+  \begin{columns}[T]
+    \begin{column}{0.5\linewidth}
+      Such organization of files: files inside folders inside
+      folders\dots can be imagined as tree
+      \begin{itemize}
+      \item files are leaves, folders are branches
+      \item \emph{Documents} is part of Yucun's stuff
+      \item \emph{UW} is inside of \emph{Documents}
+      \item \emph{info201} is inside of \emph{UW}
+      \item file system tree is the basis of navigation
+        in code
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{center}
+        \includegraphics[width=\linewidth]{img/yucun-folders.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Navigate the tree}
+  How can R app access ``fractal.png''?
+  \begin{itemize}
+  \item R app is in ``exercises'' (just for an example)
+    \begin{itemize}
+    \item Called \textbf{working directory}
+    \end{itemize}
+  \item ``fractal.png'' is in ``Pictures''
+  \end{itemize}
+  \begin{enumerate}
+  \item left (into ``info201'')
+  \item left (into ``UW'')
+  \item left (into ``Documents'')
+  \item left (into all the Yucun's stuff)
+  \item into ``Pictures''
+  \item grab ``fractal.png'' from there.
+  \end{enumerate}
+  In a more compact way:
+  \begin{itemize}
+  \item ``up-up-up-up-Pictures-fractal.png''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exercise}
+  Yucun runs a java program
+  inside ``cse142''.
+  \begin{itemize}
+  \item This is the \emph{working directory}
+  \end{itemize}
+  \begin{itemize}
+  \item How can java access the ``cheatsheet.pdf'' file in
+    ``info201''?
+  \item Write out a similar navigation list
+  \item Write the compact form of the list
+  \end{itemize}
+
+  See
+  \href{https://faculty.washington.edu/otoomet/info201-book/solutions.html\#cmd-fstree-navigate}{the
+  solution}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Root directory}
+  The ``mother of all directories''
+  \begin{itemize}
+  \item ``/'' on mac/linux
+  \item ``This PC'' on windows
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Folders as a tree}
+  \begin{columns}[T]
+    \begin{column}{0.5\linewidth}
+      Mac
+      \begin{center}
+        \includegraphics[width=\linewidth]{img/root-home-folder-mac.png}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      Windows
+      \begin{center}
+        \includegraphics[width=\linewidth]{img/root-home-folder-win.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{Command Line}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \frametitle{History}
+  \begin{itemize}
+  \item Originates from teleprinters
+  \item First separate command shells in 1960s
+    \begin{itemize}
+    \item (First computers controlled with lights and switches)
+    \end{itemize}
+  \item UNIX shell 1971
+  \item Dominant way for computer access till 1990s
+  \item power-user tool today
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Teletype}
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{img/teletype.jpg}
+  \end{center}
+  Wikimedia commons: photograph by Rama, Wikimedia Commons CC BY-SA 2.0
+\end{frame}
+
+\begin{frame}
+  \frametitle{Role today}
+  \begin{itemize}
+  \item Used much less than pre-win95 days
+    \begin{itemize}
+    \item Casual users hardly use it
+    \end{itemize}
+  \item Widely used by advanced users
+    \begin{itemize}
+    \item Text entry often faster than mouse movement, clicks
+      \begin{itemize}
+      \item CLI commands much more easy to repeat, automatize (shell
+        scripting is programming!)
+      \item Command history is a good document
+      \item Many programming languages (R, python, Julia, ...) use CLI
+        for interactive work
+      \end{itemize}
+    \end{itemize}
+  \item Internet tools
+    \begin{itemize}
+    \item Google advanced search
+    \item AWS tools
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Command line in unexpected places}
+  \begin{columns}[T]
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=\linewidth]{minecraft-command-line.png}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=\linewidth]{gmail-command-line.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{CLI basics}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \frametitle{There are different CLI-s around}
+  \begin{itemize}
+  \item We use \emph{bash}
+    \begin{itemize}
+    \item compatible with Mac zsh
+    \item default on most "ordinary" linux distros
+    \item Windows: install \textbf{git} (it also installs bash), you
+      can also install linux subsystem
+    \end{itemize}
+  \item Windows' \emph{CMD} or \emph{command prompt}
+    is a different CLI, incompatible
+    with \emph{bash}
+  \item Windows' \emph{PowerShell} is also different and incompatible
+  \item there is a plethora of other shells.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Command Example}
+  \begin{center}
+    \includegraphics[width=\linewidth]{img/cli_example.png}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{CLI Anatomy}
+<<engine="bash", eval=FALSE>>=
+otoomet@is-otoomett470:~/tyyq/info201$ 
+@ 
+\begin{itemize}
+\item this is \emph{command prompt}
+\item \emph{user name} @ \emph{computer name} : \emph{current folder}
+  \$
+\item Shell has its \emph{current working directory}
+  \begin{itemize}
+  \item It's location in the file system tree
+  \end{itemize}
+\item \emph{\textasciitilde/tyyq/info201}:
+  \begin{itemize}
+  \item In home folder (\textasciitilde)
+  \item in ``tyyq''
+  \item in ``info201''
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Where is the current folder?}
+<<engine="bash", eval=FALSE>>=
+pwd
+@  
+\begin{itemize}
+\item print working directory
+\end{itemize}
+Exercise:
+\begin{itemize}
+\item Open terminal
+\item Print working directory
+\item Can you find this folder in your file manager?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{More navigation: cd}
+  \texttt{cd}: change directory
+<<engine="bash", eval=FALSE>>=
+cd  # no arguments: go to home directory
+cd Documents  # go to directory "Documents"
+cd ..  # up one directory
+cd ~  # go to home directory
+@   
+Exercise:
+\begin{itemize}
+\item Open terminal
+\item What is your working directory?
+\item Go into ``Documents''
+\item Use \texttt{pwd} to ensure you are there
+\item Go back to your home folder
+\item Use \texttt{pwd} to ensure you are there
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ls: show files}
+<<engine="bash", eval=FALSE>>=
+ls
+@  
+\begin{itemize}
+\item LiSt files
+\end{itemize}
+\texttt{ls} has many extensions:
+<<engine="bash", eval=FALSE>>=
+ls -l  # list in Long form (often abbreviated as 'll')
+ls -t  # order by Time
+ls -tr  # order by Time Reverse
+@  
+demo comparison with file manager
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{More navigation}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+<<engine="sh", eval=FALSE>>=
+cd [folder name]
+@
+      How can Yucun get from ``info201'' to ``Pictures''?
+      \begin{itemize}
+      \item left (to ``UW'')
+      \item left (to ``Documents'')
+      \item left (to home)
+      \item into ``Pictures''
+      \end{itemize}
+      In shell syntax:
+<<engine="sh", eval=FALSE>>=
+cd ../../../Pictures
+@
+This is \textbf{relative path}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \includegraphics[width=\linewidth]{yucun-folders.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Navigating in shell}
+  \begin{itemize}
+  \item Replace ``left'' (or ``up'') with two dots \texttt{..}
+  \item Put forwards slash \texttt{/} between items
+  \item You can use tilde \texttt{\textasciitilde} to denote home
+    folder:
+<<engine="sh", eval=FALSE>>=
+cd ~/Pictures
+@
+(This is \textbf{absolute path})
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Exercise}
+  What is your home directory?  Run commands:
+<<engine="bash">>=
+cd ~
+pwd
+@   
+\end{frame}
+
+\begin{frame}
+  \frametitle{Consider Yucun's computer}
+\begin{columns}[T]
+  \begin{column}{0.5\linewidth}
+    Yucun's home folder:
+    \begin{center}
+      \includegraphics[width=\linewidth]{yucun-folders.png}
+    \end{center}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      Yucun's computer root system
+      \begin{center}
+        \includegraphics[width=\linewidth]{root-home-folder-mac.png}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exercise}
+  \begin{itemize}
+  \item What is the \emph{absolute address} of ``fractal.png''?
+  \item What is the \emph{relative address} of ``cheatsheet.pdf''
+    relative to ``cse142''?
+  \item What command does Yucun need to navigate to ``info201'' if he
+    opens terminal in his home folder?
+  \item How can Yucun move (change working directory) from ``stuff''
+    to ``cse142''?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{See files}
+<<engine="bash", eval=FALSE>>=
+ls
+@  
+\begin{itemize}
+\item LiSt files
+\end{itemize}
+\texttt{ls} has many options:
+<<engine="bash", eval=FALSE>>=
+ls -l  # list in Long form (often abbreviated as 'll')
+ls -t  # order by Time
+ls -tr  # order by Time Reverse
+@  
+demo comparison with file manager
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Exercise}
+  What is your home directory?  Run commands:
+<<engine="bash", eval=FALSE>>=
+cd ~
+pwd
+@   
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bash Goodies}
+  Some of these are \textbf{extremely important/useful}!
+  \begin{itemize}
+  \item \textbf{up/down arrow}: \textbf{history}
+  \item \textbf{tab-completion}
+  \item \textbf{Ctrl-C} (hold down ctrl and press 'c'): \textbf{break existing command}
+    ("control-c to flee")
+  \end{itemize}
+\end{frame}
+
 \end{document}
 
 
+
+## Exercise
+
+* Open a text file with *vi*:
+
+    * (you may also pick an existing file)
+
+```bash
+$ vi a-text-file.txt
+```
+
+    - get out of it :-)
+
+
+## Power-Users Use vi!
+
+![](img/datalab_keyboard.jpg)
+
+
+## Learn More
+
+- **man <command>** show documentation for _command_
+
+    - **man zcat** teaches you about zcat
+	
+	- you may prefer to type **man zcat** in browser search bar
+      instead ;-)
+
+## Wednesday:
+
+* git and GitHub
+
+* markdown
+
+* **read** the [book](https://info201.github.io/) chapters 2,3,4
+
+* **create** github account
+
+* install the software
+
+    * we'll address the problems in the lab
+	
+* play with command line :-)
+
+
+\begin{tikzpicture}[remember picture,overlay]
+    \node[at=(current page.center)] {
+        \includegraphics[page=20, width=\paperwidth, height=\paperheight]{lecture-2-git-markdown.pdf}
+    };
+\end{tikzpicture}
+
+
+## Branches
+
+Branches are independent "branches" of the project
+
+* Create a new branch:
+```
+git checkout -b <branch name>
+```
+* Switch to an existing branch:
+```
+git checkout <branch name>
+```
+* Which branch are we in?
+```
+git branch
+```
+* merge changes from _mybranch_ to _master_:
+```
+git checkout master
+git merge mybranch
+```
+Note: may give conflicts
+
+
+# Exercise
+
+## Your Turn
+
+* ch4-git-basics/exercise-1: git setup
+
+* ch4-git-basics/exercise-3: basic workflow
+
+* ch4-git-basics/exercise-2: branches
+
+
+
+
+
+
+# What is Markdown
+
+## Markdown
+
+![Markdown in Atom](img/markdown_in_atom.png)
+
+* made to be easily readable
+* easy to learn and use
+* limited, fragile
+
+
+## Markup Language vs Text Processor
+
+* **Markup language** (program your text):
+    - Examples:
+	    - **latex**, **html**, **markdown**
+    - use simple formatting
+	    (- no text style, color etc)
+	- stress document structure
+	- document layout defined separately (in CSS/style file)
+	
+* **Word Processor** (paint your text)
+    - Examples:
+	    - **MS Word**, **Google docs**
+	- easily adjust the layout of individual elements (words, letters)
+	    - WYSIWIG editing
+	- little stress on structure
+	- layout is part of the text
+
+
+## Who uses Markdown?
+
+* _slack_: text can be formatted using markdown symbols
+* _GitHub_: GH automatically renders **readme.md** files.  Other md
+  files on request.
+* _stackoverflow_: questions/answers/comments support markdown
+  formatting.
+* many newer _R vignettes_ ([see e.g. ggplot2 aesthetics](https://cran.r-project.org/web/packages/ggplot2/vignettes/ggplot2-specs.html))
+
+
+# Markdown Syntax
+
+## Headings
+
+```markdown
+# Heading
+## Sub-heading
+### Another deeper heading
+```
+
+## Paragraphs
+
+```markdown
+Paragraphs are separated
+by a blank line.
+
+Two spaces at the end of a line leave a  
+line break.
+```
+
+Paragraphs are separated
+by a blank line.
+
+Two spaces at the end of a line leave a  
+line break.
+
+## Block Quotes
+
+```markdown
+This is a quote:
+
+> A clever man commits no minor blunders
+
+-- Goethe
+```
+
+This is a quote:
+
+> A clever man commits no minor blunders
+
+-- Goethe
+
+
+## Text attributes
+
+
+```markdown
+_italic_
+*italic*,
+__bold__
+**bold**
+`monospace (code)`
+```
+_italic_  
+*italic*,  
+__bold__  
+**bold**  
+`monospace (code)`  
+
+Horizontal rule:
+
+`---`
+
+## Bullet List
+
+```markdown
+* apples
+* oranges
+* pears
+```
+
+* apples
+* oranges
+* pears
+
+## Ordered List
+
+```markdown
+1. apples
+2. oranges
+3. pears
+```
+
+1. apples
+2. oranges
+3. pears
+
+http links:
+
+`[link](http://example.com)`
+
+[link to an example page](http://example.com)
+
+
+# Rendering Markdown
+
+## Rendering Markdown
+
+As latex and html, markdown should be rendered
+
+- online editors
+- markdown preview (Atom, emacs)
+    - Atom: packages - Markdown Preview - Toggle Preview (ctrl - shift - M)
+- websites
+    - stackoverflow
+	- github
+- browser extensions
+- pandoc converts to html, pdf
+    - rmarkdown uses this
+	- these slides are made with pandoc
+
+# Demo
+
+## Demo
+
+* fork play repo
+* edit README.md  
+(use emacs/RStudio/Atom)
+    * add my favorite cites
+	* quote someone
+	* put in the headers
+	* add an image
+
+<!-- Alternative descriptions of the same reality evoke different
+emotions and different associations. -->
+
+
+## Limits, Compatibility issues
+
+* have to incorporate latex and/or html to extend besides simple
+  standard
+    * [how to do two-column text on slides?](https://support.rstudio.com/hc/en-us/community/posts/202717656-Can-we-have-columns-in-rmarkdown-beamer-presentations-)
+	* [how to resize figure?](https://stackoverflow.com/questions/14675913/how-to-change-image-size-markdown)
+	* have to tinker YAML headers
+* learn latex, html, YAML, *and markdown*
+* How I add Mike's pdf slides:
+
+```latex
+\begin{tikzpicture}[remember picture,overlay]
+    \node[at=(current page.center)] {
+        \includegraphics[page=15, width=\paperwidth, height=\paperheight]{lecture-2-git-markdown.pdf}
+    };
+\end{tikzpicture}
+---
+```
+
+
+## Monday
+
+* R intro: language, variables
+    * pretty much intro programming
+* ensure you have R (and RStudio) installed and ready to go
+* read book Ch 5
+
+![](img/Rlogo.png){width=50%}
 
 
 
