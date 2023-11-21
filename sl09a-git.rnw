@@ -1,0 +1,485 @@
+\documentclass[mathserif, xcolor=table, svgnames, aspectratio=169]{beamer}
+\mode<presentation>
+{
+  \usetheme{Hannover}
+  \setbeamercovered{transparent}
+}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsthm}
+\usepackage{array,xspace}
+\usepackage{dcolumn}
+\usepackage{eulervm}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\input{isomath.tex}
+\usepackage{booktabs, multicol, multirow}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{relsize}
+\usepackage{wasysym}
+
+\hypersetup{colorlinks, urlcolor=blue}
+
+\newcommand{\individuals}{\mathbbm{I}}
+\newtheorem{proposition}{Proposition}
+\long\def\GobbleColumnStart#1\GobbleColumnStop{}
+\let\GobbleColumnStop\relax
+\newcolumntype{i}{>{\GobbleColumnStart}c<{\GobbleColumnStop}}
+\newcommand{\V}{\ensuremath{\surd}}
+\graphicspath{{./}{./img/}}
+\let\hlesc\hlstd \let\hlpps\hlstd \let\hllin\hlstd \let\hlslc\hlcom 
+
+\title[INFO 201]{Technical Foundations}
+\subtitle{Introduction}
+\author[]{Ott Toomet}
+\begin{document}
+<<init, echo=FALSE, include=FALSE>>=
+options(tibble.width=50, tibble.print_max=6, tibble.print_min=4)
+knitr::opts_knit$set(aliases=c(h="fig.height"))
+knitr::opts_chunk$set(fig.height=100/25.4, fig.path=".figs/cmd-git",
+                     message=FALSE, 
+                     cache=TRUE, cache.path=".cache/cmd-git/")
+@ 
+
+\begin{frame}
+  \maketitle
+\end{frame}
+
+\begin{frame}
+  \frametitle{Announcements}
+  \begin{itemize}
+  \item How is PS5?
+  \item No lab this week!
+  \item PS6 ... 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The big picture}
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+      \item R Basics
+        \begin{itemize}
+        \item W2-4: {R language}, functions, {vectors},
+        \item W4: How to code
+        \item W4: control structures
+        \end{itemize}
+      \item W5: File system
+      \item W5: {Literal programming}
+      \item Data manipulations
+        \begin{itemize}
+        \item W6: Data frames
+        \item W6-W7: {piped operations}
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+      \item Plots
+        \begin{itemize}
+        \item W7: {how to plot}, {tuning plots}
+        \item W8: {different plot types}
+        \end{itemize}
+      \item W9: \alert{git and command line}
+      \item More data manipulations
+        \begin{itemize}
+        \item W10: Data cleaning
+        \item W10: Data merging
+        \end{itemize}
+      \item W11: Final project
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Goals}
+  \begin{itemize}
+  \item Navigating files on command line
+  \item git/github basics
+  \item create a repo, clone
+  \item commit, push
+  \item fork
+  \end{itemize}
+\end{frame}
+
+
+\section[Git]{Version Control and Git}
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[width=0.85\linewidth]{img/no-version-control.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Track changes}
+  \begin{center}
+    \includegraphics[width=0.8\linewidth]{libreoffice-track-changes.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is git}
+  Git is a \emph{version control system} (VC) (there are many others)
+  \begin{itemize}
+  \item keep track of edits
+  \item view and retrieve old project files (``time machine'')
+  \item multiple semi-independent “branches” of the project so that several people can work in parallel on different tasks
+  \item incorporate other team members’ work into your “branch”
+  \item keep track and solve potential problems (“conflicts”) that may arise if different members do incompatible changes to the project
+  \item synchronize your local set of project files with the other members through cloud-based “remotes”
+  \item add explanations (“commit message”) to the changes you did to the project files.
+  \item \dots and much more
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Track changes vs VC}
+  \begin{itemize}
+  \item Explicitly request to remember current state (\emph{commit})
+  \item Add explanatory message to each recorded state (\emph{commit
+      message})
+  \item Changes stored locally, unless explicitly requested to be
+    uploaded (\emph{pushed})
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Main Concepts}
+  \begin{description}
+  \item[Repo] (Repository): a place where git keeps the project's files and their history
+  \item[Working copy] your set of files you edit.  Working copy is not
+    repo!
+  \item[Commit] Telling git to record the current state of affairs.
+    You should provide a brief explanatory text, \emph{commit
+      message}. 
+  \item[Remote] copy of your local repo on a cloud server, such as
+    Github.
+  \item[Push] uploading the changes in your local repo to the remote.
+    Downloading updates from remote is called \textbf{pulling}.
+  \item[Github] a popular cloud server to host remotes (there are others).
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Github}
+  \begin{itemize}
+  \item Sign up
+  \item Create access token
+    \begin{itemize}
+    \item ssh keys easier but have more security implications
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Forking and cloning}
+  \begin{description}
+  \item[Clone]: download a remote repo to your computer and syncronize
+    with the remote
+  \item[Fork]: make a copy of someone else's repo on Github under your
+    Github user name 
+  \end{description}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Basic Workflow}
+  \begin{enumerate}
+  \item \textbf{clone} repo to your local computer
+    \begin{itemize}
+    \item only done once, now you have working copy
+    \end{itemize}
+  \item \label{it:edit} edit the files
+    \begin{itemize}
+    \item change, add, delete
+    \end{itemize}
+  \item \textbf{commit} your changes
+    \begin{itemize}
+    \item Add an informative \emph{commit message}
+    \end{itemize}
+  \item \textbf{push} your changes to github
+  \item Go back to~\ref{it:edit}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Before you start...}
+... configure your git (only once per computer)
+
+<<engine="bash", eval=FALSE>>=
+# enter your full name (without the dashes)
+git config --global user.name "your-full-name"
+
+# enter your email address (the one associated with your GitHub account)
+git config --global user.email "your-email-address"
+@
+\end{frame}
+
+\begin{frame}
+  \frametitle{Demo}
+  \begin{itemize}
+  \item fork happy gitting
+    \url{https://github.com/info201b-2023wi/happy-gitting}
+    under your user
+    \begin{itemize}
+    \item must be done on github
+    \item if you don't fork, you cannot push later
+    \end{itemize}
+  \item clone it to your local computer
+<<engine="bash", eval=FALSE>>=
+git clone <https://your repo url here>
+@
+   what happens if you clone the original repo, not your fork?
+
+   (don't fork your problem set repo)
+ \item edit files.  
+   
+   use whichever text editor you like (RStudio, Atom, ...)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adding/status}
+  \begin{itemize}
+  \item if you added a file, tell this to git:
+<<engine="bash", eval=FALSE>>=
+git add <new_file>
+@
+\item What git files have been modified/added/deleted...
+<<engine="sh", eval=FALSE>>=
+git status
+@
+\item Shorter version of it
+<<engine="sh", eval=FALSE>>=
+git status -s
+@
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item commit your changes
+<<engine="bash", eval=FALSE>>=
+git commit -a -m "<explain what did you do>"
+@
+ `-a` for all changes  
+\item send your edits to the central repo
+<<engine="bash", eval=FALSE>>=
+git push
+@ 
+  \item check the updates on GitHub
+  \item View the log messages
+<<engine="bash", eval=FALSE>>=
+git log
+@
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What happens if you forget your commit message?}
+<<engine="sh", eval=FALSE>>=
+git commit -a
+@
+If you are in \texttt{vi}:
+\begin{itemize}
+\item exit with \texttt{ZZ} or with \texttt{:q!}
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+
+
+
+
+# What is Markdown
+
+## Markdown
+
+![Markdown in Atom](img/markdown_in_atom.png)
+
+* made to be easily readable
+* easy to learn and use
+* limited, fragile
+
+
+## Markup Language vs Text Processor
+
+* **Markup language** (program your text):
+    - Examples:
+	    - **latex**, **html**, **markdown**
+    - use simple formatting
+	    (- no text style, color etc)
+	- stress document structure
+	- document layout defined separately (in CSS/style file)
+	
+* **Word Processor** (paint your text)
+    - Examples:
+	    - **MS Word**, **Google docs**
+	- easily adjust the layout of individual elements (words, letters)
+	    - WYSIWIG editing
+	- little stress on structure
+	- layout is part of the text
+
+
+## Who uses Markdown?
+
+* _slack_: text can be formatted using markdown symbols
+* _GitHub_: GH automatically renders **readme.md** files.  Other md
+  files on request.
+* _stackoverflow_: questions/answers/comments support markdown
+  formatting.
+* many newer _R vignettes_ ([see e.g. ggplot2 aesthetics](https://cran.r-project.org/web/packages/ggplot2/vignettes/ggplot2-specs.html))
+
+
+# Markdown Syntax
+
+## Headings
+
+```markdown
+# Heading
+## Sub-heading
+### Another deeper heading
+```
+
+## Paragraphs
+
+```markdown
+Paragraphs are separated
+by a blank line.
+
+Two spaces at the end of a line leave a  
+line break.
+```
+
+Paragraphs are separated
+by a blank line.
+
+Two spaces at the end of a line leave a  
+line break.
+
+## Block Quotes
+
+```markdown
+This is a quote:
+
+> A clever man commits no minor blunders
+
+-- Goethe
+```
+
+This is a quote:
+
+> A clever man commits no minor blunders
+
+-- Goethe
+
+
+## Text attributes
+
+
+```markdown
+_italic_
+*italic*,
+__bold__
+**bold**
+`monospace (code)`
+```
+_italic_  
+*italic*,  
+__bold__  
+**bold**  
+`monospace (code)`  
+
+Horizontal rule:
+
+`---`
+
+## Bullet List
+
+```markdown
+* apples
+* oranges
+* pears
+```
+
+* apples
+* oranges
+* pears
+
+## Ordered List
+
+```markdown
+1. apples
+2. oranges
+3. pears
+```
+
+1. apples
+2. oranges
+3. pears
+
+http links:
+
+`[link](http://example.com)`
+
+[link to an example page](http://example.com)
+
+
+# Rendering Markdown
+
+## Rendering Markdown
+
+As latex and html, markdown should be rendered
+
+- online editors
+- markdown preview (Atom, emacs)
+    - Atom: packages - Markdown Preview - Toggle Preview (ctrl - shift - M)
+- websites
+    - stackoverflow
+	- github
+- browser extensions
+- pandoc converts to html, pdf
+    - rmarkdown uses this
+	- these slides are made with pandoc
+
+# Demo
+
+## Demo
+
+* fork play repo
+* edit README.md  
+(use emacs/RStudio/Atom)
+    * add my favorite cites
+	* quote someone
+	* put in the headers
+	* add an image
+
+<!-- Alternative descriptions of the same reality evoke different
+emotions and different associations. -->
+
+
+## Limits, Compatibility issues
+
+* have to incorporate latex and/or html to extend besides simple
+  standard
+    * [how to do two-column text on slides?](https://support.rstudio.com/hc/en-us/community/posts/202717656-Can-we-have-columns-in-rmarkdown-beamer-presentations-)
+	* [how to resize figure?](https://stackoverflow.com/questions/14675913/how-to-change-image-size-markdown)
+	* have to tinker YAML headers
+* learn latex, html, YAML, *and markdown*
+* How I add Mike's pdf slides:
+
+```latex
+\begin{tikzpicture}[remember picture,overlay]
+    \node[at=(current page.center)] {
+        \includegraphics[page=15, width=\paperwidth, height=\paperheight]{lecture-2-git-markdown.pdf}
+    };
+\end{tikzpicture}
+---
+```
